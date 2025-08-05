@@ -16,7 +16,6 @@ def load_data_and_model():
         train_customers = pd.read_csv('train_customers.csv')
         train_locations = pd.read_csv('train_locations.csv')
         
-        # Robustly convert 'id' column to string to avoid errors
         vendors['id'] = pd.to_numeric(vendors['id'], errors='coerce')
         vendors['id'] = vendors['id'].fillna(-1).astype(str)
         
@@ -57,7 +56,8 @@ selected_vendor_id = st.sidebar.selectbox(
 # --- Core Function for What-If Analysis ---
 def run_what_if_analysis(selected_vendor_id):
     random_customer_loc = locations.sample(1).iloc[0]
-    random_customer = customers[customers['CID'] == random_customer_loc['CID']].iloc[0]
+    # --- FIX: Use 'customer_id' instead of 'CID' ---
+    random_customer = customers[customers['customer_id'] == random_customer_loc['customer_id']].iloc[0]
     
     selected_vendor = vendors[vendors['id'] == str(selected_vendor_id)].iloc[0]
 
@@ -92,6 +92,7 @@ def run_what_if_analysis(selected_vendor_id):
 
 # --- Core Function for New Location Analysis ---
 def run_new_location_analysis(selected_vendor_id, new_cust_lat, new_cust_lon):
+    # --- FIX: Use 'customer_id' instead of 'CID' ---
     random_customer = customers.sample(1).iloc[0]
     selected_vendor = vendors[vendors['id'] == str(selected_vendor_id)].iloc[0]
 
